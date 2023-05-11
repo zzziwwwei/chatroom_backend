@@ -7,6 +7,14 @@ const app = express();
 app.use(express.urlencoded({ extended: true })); 
 app.use(express.json());
 app.use(multer().none()); 
+app.set('views', './views');
+app.set('view engine', 'ejs')
+app.use('/static', express.static(__dirname + '/public'));
+
+const indexRouter = require('./routers/index');
+app.use('/',indexRouter)
+const apiRouter = require('./routers/api');
+app.use('/api',apiRouter)
 
 
 const databasePool = createPool({
@@ -18,16 +26,8 @@ const databasePool = createPool({
 
 
 
-
-
+// WebSocket
 const port = 3000;
-app.set('views', './views');
-app.set('view engine', 'ejs')
-app.use('/static', express.static(__dirname + '/public'));
-
-
-
-
 const { WebSocketServer } = require('ws');
 const wss = new WebSocketServer({ port: 8080 });
 wss.on('connection', function connection(ws) {
@@ -42,27 +42,9 @@ wss.on('connection', function connection(ws) {
 })
 });
 
-app.get('/', (req, res) => {
-  res.render('index', {
 
-  })
-})
-app.get('/get', async function (req, res) {
-  console.log("get")
-  databasePool.query(`SELECT username FROM users;`,(err,res)=>{
-    return console.log(res);
-  })
-  res.render('index')
-});
 
-app.post('/post', async function (req, res) {
-  console.log("post");
-  let username = req.body.username
-  let password = req.body.password
-  databasePool.query(`INSERT INTO users (username,password)
-  VALUES (?,?); `,[username, password]);
-  res.render('index');
-});
+
 app.listen(port, () => {
   console.log(port)
 })
