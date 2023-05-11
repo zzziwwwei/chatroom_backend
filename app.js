@@ -1,7 +1,5 @@
-const dotenv = require('dotenv');
-dotenv.config();
+
 const express = require('express');
-const {createPool} = require('mysql');
 const multer = require("multer");
 const app = express();
 app.use(express.urlencoded({ extended: true })); 
@@ -15,14 +13,10 @@ const indexRouter = require('./routers/index');
 app.use('/',indexRouter)
 const apiRouter = require('./routers/api');
 app.use('/api',apiRouter)
+const authRouter = require('./routers/authRouter');
+app.use('/api/auth',authRouter)
 
 
-const databasePool = createPool({
-  host:process.env.MYSQL_HOST,
-  user:process.env.MYSQL_ROOT,
-  password:process.env.MYSQL_PASSWORD,
-  database:process.env.MYSQL_DATEBASE
-})
 
 
 
