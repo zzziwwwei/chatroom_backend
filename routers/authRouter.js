@@ -15,7 +15,9 @@ router.post('/login', async function (req, res) {
         let row = await query(`SELECT user_id,username,password FROM users where username=?;`, (username))
         let userid = row[0].user_id.toString()
         if (await bcrypt.compare(req.body.password, row[0].password)) {
-            res.send(await Jwt(userid))
+            let token = await Jwt(userid)
+            console.log(token)
+            res.send(token.toString())
             res.end()
         }
     }
@@ -24,7 +26,7 @@ router.post('/login', async function (req, res) {
     }
 });
 async function Jwt(userid) {
-    const token = jwt.sign(userid, SECRET);
+    const token = jwt.sign(userid.toString(), SECRET);
     return token;
 }
 
