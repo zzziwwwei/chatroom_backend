@@ -10,6 +10,7 @@
   "author": "hsuchihting",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
@@ -19,6 +20,7 @@
     "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
     "mysql": "^2.18.1",
+    "node-localstorage": "^2.2.1",
     "util": "^0.12.5",
     "ws": "^8.13.0"
   }

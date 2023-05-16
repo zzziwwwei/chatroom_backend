@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>homePage</title>
+    <style>
+        .fill {
+            height: 100vh;
+            width: 100%;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>玩家<h1>
+
+
+            <p id="character">character</p>
+            <p id="characterLevel">character_leve</p>
+            <p id="characterClass">character_class</p>
+            </div>
+            
+            <a href="/game">開始遊戲</a>
+
+
+            <script>
+                const token = localStorage.getItem('token');
+                function init() {
+                    console.log(token);
+                    const xhr = new XMLHttpRequest();
+                    const method = 'POST';
+                    const url = 'http://localhost:3000/api/user/selectCharacter';
+                    xhr.open(method, url, true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            const response = xhr.responseText;
+                            if (response != "no character") {
+                                LoadCharacter(JSON.parse(response)[0])
+                            }
+                            else {
+                                CreatCharacter()
+                            }
+                        } else {
+                            console.error('請求失敗。狀態碼: ' + xhr.status);
+                        }
+                    };
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    const data = { token: token }
+                    xhr.send(JSON.stringify(data));
+                }
+                function CreatCharacter() {
+                    const xhr = new XMLHttpRequest();
+                    const method = 'POST';
+                    const url = 'http://localhost:3000/api/user/creatCharacter';
+                    xhr.open(method, url, true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200) {
+                            const response = xhr.responseText;
+                            console.log(response)
+                            if (response == "create success") {
+                                init()
+                            }
+                        } else {
+                            console.error('請求失敗。狀態碼: ' + xhr.status);
+                        }
+                    };
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    const data = { token: token }
+                    xhr.send(JSON.stringify(data));
+                }
+                init()
+                function LoadCharacter(playerData) {
+                    localStorage.setItem('playerData', JSON.stringify(playerData));
+                    console.log(JSON.parse(localStorage.getItem('playerData')));
+                    document.getElementById("character").innerText = 'character:' + JSON.parse(localStorage.getItem('playerData')).character_name;
+                    document.getElementById("characterLevel").innerText = 'characterLevel:' + JSON.parse(localStorage.getItem('playerData')).character_level;
+                    document.getElementById("characterClass").innerText = 'characterClass:' + JSON.parse(localStorage.getItem('playerData')).character_class;
+                }
+              
+                
+            </script>
+</body>
+
+
+</html>

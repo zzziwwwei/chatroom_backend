@@ -14,20 +14,65 @@
 </head>
 
 <body>
-    <h1 style="color: greenyellow; font-size:20px">login</h1>
-    <textarea id="txtShow" disabled></textarea>
-    <input id="txtInput" type="text">
-    <button id="btnSend">送出</button>
-    <form method="post"action="/post">
-        <label >username:</label>
-        <input type="text" name="username"><br><br>
-        <label >password:</label>
-        <input type="text"  name="password"><br><br>
-        <input type="submit" value="Submit">
-      </form> 
-    <script src="http://localhost:3000/static/js/main.js">
+    <h1>登入<h1>
+            <label>username:</label>
+            <input id="username" type="text" name="username"><br><br>
+            <label>password:</label>
+            <input id="password" type="text" name="password"><br><br>
+            <button id="loginBtn" href="">登入</button>
+            <button id="register" href="">註冊</button>
 
-    </script>
+
+
+            <script>
+                let username = document.getElementById("username");
+                let pasword = document.getElementById("password");
+                let loginBtn = document.getElementById("loginBtn");
+                loginBtn.addEventListener('click', function (e) {
+                    Action("loginBtn")
+                })
+                let registerBtn = document.getElementById("register");
+                registerBtn.addEventListener('click', function (e) {
+                    Action("register")
+                })
+
+
+                function Action(action) {
+
+                    const xhr = new XMLHttpRequest();
+                    let method;
+                    let url ;
+                    if(action=="loginBtn"){
+                    method = 'POST';
+                    url = 'http://localhost:3000/api/auth/login';
+                    }
+                    if(action=="register"){
+                    method = 'POST';
+                    url = 'http://localhost:3000/api/user/register';
+                    }
+                    xhr.open(method, url, true);
+                    xhr.onload = function () {
+                        if (xhr.status === 200 && action=="loginBtn") {
+                            const token = xhr.responseText;
+                            localStorage.setItem('token', token);
+                            window.location.href="http://localhost:3000/player"              
+                        } 
+                        if (xhr.status === 200 && action=="register") {
+                            const message = xhr.responseText;
+                            console.log(message)             
+                        }
+                        else {
+                            console.error('請求失敗。狀態碼: ' + xhr.status);
+                        }
+                    };
+                    xhr.setRequestHeader('Content-Type', 'application/json');
+                    const data = { username: username.value, password: password.value };
+                    xhr.send(JSON.stringify(data));
+                }
+              
+
+            </script>
 </body>
+
 
 </html>
