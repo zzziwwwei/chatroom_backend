@@ -5,4 +5,4 @@ npm init
 
 npm install
 
-npm run start
+node app.js
